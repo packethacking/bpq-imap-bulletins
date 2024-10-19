@@ -16,6 +16,7 @@ PERONAL_MAILBOXES = {}
 
 
 @implementer(imap4.IMailbox)
+@implementer(imap4.INamespacePresenter)
 class IMAPUserAccount:
 
 
@@ -50,6 +51,20 @@ class IMAPUserAccount:
                 self.api,
                 "INBOX"
             )
+
+    def getPersonalNamespaces(self):
+        return [[b"", b"/"]]
+
+    def getSharedNamespaces(self):
+        return None
+
+    def getOtherNamespaces(self):
+        return None
+
+    def getUserNamespaces(self):
+        # INamespacePresenter.getUserNamespaces
+        return None
+
 
     def listMailboxes(self, ref, wildcard):
         "only support one folder"

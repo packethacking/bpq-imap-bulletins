@@ -7,6 +7,7 @@ name = "pypi"
 twisted = "*"
 "zope.interface" = "*"
 swagger-client = {file = "client", editable = true}
+httpdate = "*"
 
 [dev-packages]
 

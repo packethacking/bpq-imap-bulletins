@@ -26,6 +26,8 @@ from io import StringIO, BytesIO
 
 from zope.interface import implementer
 
+import httpdate
+
 from twisted.mail import imap4
 from twisted.python import log
 
@@ -73,7 +75,7 @@ class MemoryIMAPMailbox(object):
         self.msgs = []
         self.listeners = []
         self.uidvalidity = (
-            int(hashlib.sha256(category .encode("utf-8")).hexdigest(), 16) % 10**8
+            int(hashlib.sha256(category.encode("utf-8")).hexdigest(), 16) % 10**8
         )
         self.category = category
 
@@ -115,14 +117,15 @@ class MemoryIMAPMailbox(object):
 
     def getUID(self, messageNum):
         return messageNum
-       # return self.msgs[messageNum - 1].uid
+
+    # return self.msgs[messageNum - 1].uid
 
     def getUIDNext(self):
         return len(self.msgs) + 1
 
     def fetch(self, msg_set, uid):
         messages = self._get_msgs(msg_set, uid)
-        return messages.items()
+        return [(k, v) for k, v in messages.items()]
 
     def addListener(self, listener):
         self.listeners.append(listener)
@@ -181,7 +184,7 @@ class MessagePart(object):
                     headers[header.lower()] = self.msg.get(header, "")
         else:
             for name in names:
-                name = name.decode()
+                #   name = name.decode()
                 headers[name.lower()] = self.msg.get(name, "")
         return headers
 
@@ -235,7 +238,7 @@ class Message(MessagePart):
 
         self.uid = original.id
         self.flags = set(flags)
-        self.date = original.date_time
+        self.date = httpdate.unixtime_to_httpdate(int(original.date_time.timestamp()))
 
     def getUID(self):
         return self.uid
