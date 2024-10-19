@@ -73,7 +73,7 @@ class MemoryIMAPMailbox(object):
         self.msgs = []
         self.listeners = []
         self.uidvalidity = (
-            int(hashlib.sha256(category             .encode("utf-8")).hexdigest(), 16) % 10**8
+            int(hashlib.sha256(category .encode("utf-8")).hexdigest(), 16) % 10**8
         )
         self.category = category
 
@@ -85,13 +85,10 @@ class MemoryIMAPMailbox(object):
     def _get_msgs(self, msg_set, uid):
         if not self.msgs:
             return {}
+
         if uid:
-            msg_set.last = max(x.uid for x in self.msgs)
-            uids = set(msg_set)
-            return dict((msg.uid, msg) for msg in self.msgs if msg.uid in uids)
-        else:
-            msg_set.last = max(x.uid for x in self.msgs)
-            return dict((msg.uid, msg) for msg in self.msgs if msg.uid in msg_set)
+            return {msg.uid: msg for msg in self.msgs}
+        return {i: self.msgs[i - 1] for i in msg_set}
 
     def getHierarchicalDelimiter(self):
         return "."
@@ -118,10 +115,10 @@ class MemoryIMAPMailbox(object):
 
     def getUID(self, messageNum):
         return messageNum
-        # return self.msgs[messageNum - 1].uid
+       # return self.msgs[messageNum - 1].uid
 
     def getUIDNext(self):
-        return max(x.uid for x in self.msgs) + 1
+        return len(self.msgs) + 1
 
     def fetch(self, msg_set, uid):
         messages = self._get_msgs(msg_set, uid)
@@ -234,8 +231,8 @@ class Message(MessagePart):
         email_message["From"] = original._from
         email_message["To"] = original.to
         email_message["Subject"] = original.subject
-
         super(Message, self).__init__(email_message)
+
         self.uid = original.id
         self.flags = set(flags)
         self.date = original.date_time

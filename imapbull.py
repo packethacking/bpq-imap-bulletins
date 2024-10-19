@@ -20,7 +20,7 @@ class IMAPUserAccount:
 
 
     def __init__(self, callsign):
-        self.callsign = callsign.decode()
+        self.callsign   = callsign.decode()
         configuration = swagger_client.Configuration()
         configuration.host = f"http://{os.environ['bpqapi']}:8080"
         configuration.username = self.callsign
