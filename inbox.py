@@ -27,6 +27,7 @@ from io import StringIO, BytesIO
 from zope.interface import implementer
 
 import httpdate
+import structlog
 
 from twisted.mail import imap4
 from twisted.python import log
@@ -78,11 +79,12 @@ class MemoryIMAPMailbox(object):
             int(hashlib.sha256(category.encode("utf-8")).hexdigest(), 16) % 10**8
         )
         self.category = category
+        self.logger = structlog.get_logger().bind(category=category)
 
-        print(f"Loading {len(initial_messages)} messages for {category}")
+        self.logger.info(f"Loading {len(initial_messages)} messages")
         for msg in initial_messages:
             self._load_message_from_api(msg)
-        print("Loaded %s messages" % len(self.msgs))
+        self.logger.info(f"Loaded {len(self.msgs)} messages")
 
     def update_mailbox(self, msgs):
         for msg_id in msgs:
@@ -93,7 +95,11 @@ class MemoryIMAPMailbox(object):
             return {}
 
         if uid:
-            return {msg.uid: msg for msg in self.msgs}
+            msg_set.last = self.getUIDNext()
+            self.logger.info(f"Fetching by UID: {msg_set}")
+            result = {msg.uid: msg for msg in self.msgs if msg.uid in msg_set}
+            self.logger.info(f"Found {len(result)} messages")
+            return result
         return {i: self.msgs[i - 1] for i in msg_set}
 
     def getHierarchicalDelimiter(self):
@@ -120,16 +126,17 @@ class MemoryIMAPMailbox(object):
         return self.uidvalidity
 
     def getUID(self, messageNum):
-        return messageNum
+        return self.msgs[messageNum - 1].uid
 
     # return self.msgs[messageNum - 1].uid
 
     def getUIDNext(self):
-        return len(self.msgs) + 1
+        return max([m.uid for m in self.msgs], default=0) + 1
 
     def fetch(self, msg_set, uid):
         messages = self._get_msgs(msg_set, uid)
-        return sorted([(k, v) for k, v in messages.items()], key=lambda x: x[0])
+        result = sorted([(k, v) for k, v in messages.items()], key=lambda x: x[0])
+        return result
 
     def addListener(self, listener):
         self.listeners.append(listener)
