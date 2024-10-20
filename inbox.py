@@ -84,6 +84,10 @@ class MemoryIMAPMailbox(object):
             self._load_message_from_api(msg)
         print("Loaded %s messages" % len(self.msgs))
 
+    def update_mailbox(self, msgs):
+        for msg_id in msgs:
+            self._load_message_from_api(self.api.mail_id_get(msg_id))
+
     def _get_msgs(self, msg_set, uid):
         if not self.msgs:
             return {}
@@ -125,7 +129,7 @@ class MemoryIMAPMailbox(object):
 
     def fetch(self, msg_set, uid):
         messages = self._get_msgs(msg_set, uid)
-        return [(k, v) for k, v in messages.items()]
+        return sorted([(k, v) for k, v in messages.items()], key=lambda x: x[0])
 
     def addListener(self, listener):
         self.listeners.append(listener)
@@ -184,7 +188,8 @@ class MessagePart(object):
                     headers[header.lower()] = self.msg.get(header, "")
         else:
             for name in names:
-                #   name = name.decode()
+
+                name = name.decode()
                 headers[name.lower()] = self.msg.get(name, "")
         return headers
 

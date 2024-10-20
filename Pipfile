@@ -8,6 +8,7 @@ twisted = "*"
 "zope.interface" = "*"
 swagger-client = {file = "client", editable = true}
 httpdate = "*"
+structlog = "*"
 
 [dev-packages]
 
