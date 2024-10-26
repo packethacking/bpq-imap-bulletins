@@ -110,13 +110,16 @@ class MemoryIMAPMailbox(object):
         return [SEEN, UNSEEN, DELETED, FLAGGED, ANSWERED, RECENT]
 
     def getMessageCount(self):
+        self.logger.info(f"Getting message count: {len(self.msgs)}")
         return len(self.msgs)
 
     def getRecentCount(self):
+        self.logger.info(f"Getting recent count: {len(self.msgs)}")
         return len(self.msgs)
         # return len([m for m in self.msgs if RECENT in m.getFlags()])
 
     def getUnseenCount(self):
+        self.logger.info(f"Getting unseen count: {len(self.msgs)}")
         return len([m for m in self.msgs if UNSEEN in m.getFlags()])
 
     def isWriteable(self):
@@ -126,14 +129,18 @@ class MemoryIMAPMailbox(object):
         return self.uidvalidity
 
     def getUID(self, messageNum):
-        return self.msgs[messageNum - 1].uid
+        uid = self.msgs[messageNum].uid
+        self.logger.info(f"Getting UID for message {messageNum}: {uid}")
+        return self.msgs[messageNum].uid
 
     # return self.msgs[messageNum - 1].uid
 
     def getUIDNext(self):
+        self.logger.info(f"Getting next UID:")
         return max([m.uid for m in self.msgs], default=0) + 1
 
     def fetch(self, msg_set, uid):
+        self.logger.info(f"Fetching messages: {msg_set}")
         messages = self._get_msgs(msg_set, uid)
         result = sorted([(k, v) for k, v in messages.items()], key=lambda x: x[0])
         return result

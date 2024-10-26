@@ -17,6 +17,7 @@ PERONAL_MAILBOXES = {}
 
 logger = get_logger()
 
+
 @implementer(imap4.IMailbox)
 @implementer(imap4.INamespacePresenter)
 class IMAPUserAccount:
@@ -54,7 +55,6 @@ class IMAPUserAccount:
 
         loop = task.LoopingCall(self.updateMailboxes)
         self.deferred_update_loop = loop.start(60)
-
 
     def updateMailboxes(self):
         self.logger.info("Updating mailboxes")

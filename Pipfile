@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-twisted = "*"
+twisted = {git = "https://github.com/tomwardill/twisted.git", editable = true, ref = "fix-imap-partial-over-length"}
 "zope.interface" = "*"
 swagger-client = {file = "client", editable = true}
 httpdate = "*"
