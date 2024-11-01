@@ -43,7 +43,7 @@ class IMAPUserAccount:
             if category in MAILBOXES:
                 continue
             MAILBOXES[category] = MemoryIMAPMailbox(
-                [x for x in bulls if x.to == category], self.api, category
+                [x for x in bulls if x.to == category], self.api, category, self.callsign
             )
 
         if not "INBOX" in MAILBOXES:
@@ -51,10 +51,10 @@ class IMAPUserAccount:
             personal = self.api.mail_personal_get()
             self.latest_personal = max([x.id for x in personal])
             self.logger.info(f"Loaded {len(personal)} personal messages")
-            MAILBOXES["INBOX"] = MemoryIMAPMailbox(personal, self.api, "INBOX")
+            MAILBOXES["INBOX"] = MemoryIMAPMailbox(personal, self.api, "INBOX", self.callsign)
 
         loop = task.LoopingCall(self.updateMailboxes)
-        self.deferred_update_loop = loop.start(60)
+        loop.start(60)
 
     def updateMailboxes(self):
         self.logger.info("Updating mailboxes")
@@ -66,9 +66,9 @@ class IMAPUserAccount:
             for category in categories:
                 if category not in MAILBOXES:
                     MAILBOXES[category] = MemoryIMAPMailbox(
-                        [x for x in bulls if x.to == category], self.api, category
+                        [x for x in bulls if x.to == category], self.api, category, self.callsign
                     )
-                MAILBOXES[category].updateMessages(
+                MAILBOXES[category].update_mailbox      (
                     [x for x in bulls if x.to == category and x.id > self.latest_bull]
                 )
         self.latest_bull = new_bull
@@ -77,7 +77,7 @@ class IMAPUserAccount:
         self.logger.info(f"Loaded {len(personal)} personal messages")
         new_personal = max([x.id for x in personal])
         if new_personal > self.latest_personal:
-            MAILBOXES["INBOX"].updateMessages(
+            MAILBOXES["INBOX"].update_mailbox(
                 [x for x in personal if x.id > self.latest_personal]
             )
         self.latest_personal = new_personal
@@ -143,11 +143,9 @@ class IMAPServerProtocol(imap4.IMAP4Server):
         return cap
 
     def lineReceived(self, line):
-        logger.info("Line received: %s" % line)
         imap4.IMAP4Server.lineReceived(self, line)
 
     def sendLine(self, line):
-        logger.info("Line sent: %s" % line)
         imap4.IMAP4Server.sendLine(self, line)
 
 

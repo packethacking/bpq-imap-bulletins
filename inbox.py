@@ -71,7 +71,7 @@ class MemoryIMAPMailbox(object):
         message.subject = message.subject.encode("ascii", "ignore").decode()
         self.msgs.append(Message(message, [], message.date_time))
 
-    def __init__(self, initial_messages, api_client, category):
+    def __init__(self, initial_messages, api_client, category, callsign):
         self.api = api_client
         self.msgs = []
         self.listeners = []
@@ -79,7 +79,7 @@ class MemoryIMAPMailbox(object):
             int(hashlib.sha256(category.encode("utf-8")).hexdigest(), 16) % 10**8
         )
         self.category = category
-        self.logger = structlog.get_logger().bind(category=category)
+        self.logger = structlog.get_logger().bind(category=category, callsign=callsign)
 
         self.logger.info(f"Loading {len(initial_messages)} messages")
         for msg in initial_messages:
@@ -88,7 +88,7 @@ class MemoryIMAPMailbox(object):
 
     def update_mailbox(self, msgs):
         for msg_id in msgs:
-            self._load_message_from_api(self.api.mail_id_get(msg_id))
+            self._load_message_from_api(msg_id)
 
     def _get_msgs(self, msg_set, uid):
         if not self.msgs:
