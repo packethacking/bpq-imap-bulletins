@@ -33,6 +33,8 @@ class IMAPUserAccount:
         self.client = swagger_client.ApiClient(configuration)
         self.api = swagger_client.MailApi(self.client)
 
+        self.latest_personal = 0
+
         bulls = self.api.mail_bulletins_get()
         self.logger.info(f"Loaded {len(bulls)} bulletins for {self.callsign}")
 
