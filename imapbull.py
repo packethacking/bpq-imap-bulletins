@@ -155,6 +155,14 @@ class IMAPServerProtocol(imap4.IMAP4Server):
         query = [x.decode() for x in query]
         imap4.IMAP4Server.do_SEARCH(self, tag, charset, query, uid)
 
+    def _singleSearchStep(self, query, msgId, msg, lastSequenceId, lastMessageId):
+        query = [
+            x.encode() if isinstance(x, str) else x
+            for x in query
+        ]
+        return super()._singleSearchStep(query, msgId, msg, lastSequenceId, lastMessageId)
+
+
     select_SEARCH = (do_SEARCH, imap4.IMAP4Server.opt_charset, imap4.IMAP4Server.arg_searchkeys)
 
 
