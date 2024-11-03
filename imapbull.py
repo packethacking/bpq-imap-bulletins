@@ -145,10 +145,17 @@ class IMAPServerProtocol(imap4.IMAP4Server):
         return cap
 
     def lineReceived(self, line):
-        imap4.IMAP4Server.lineReceived(self, line)
+        logger.info(f"Received: {line}")
+        super().lineReceived(line)
 
     def sendLine(self, line):
         imap4.IMAP4Server.sendLine(self, line)
+
+    def do_SEARCH(self, tag, charset, query, uid=0):
+        query = [x.decode() for x in query]
+        imap4.IMAP4Server.do_SEARCH(self, tag, charset, query, uid)
+
+    select_SEARCH = (do_SEARCH, imap4.IMAP4Server.opt_charset, imap4.IMAP4Server.arg_searchkeys)
 
 
 class TestServerRealm(object):
