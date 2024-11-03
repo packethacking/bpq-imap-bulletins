@@ -28,40 +28,144 @@ class GetInfoResponse(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'info': 'BpqInfo'
+        'node_call': 'str',
+        'alias': 'str',
+        'locator': 'str',
+        'software': 'str',
+        'version': 'str'
     }
 
     attribute_map = {
-        'info': 'info'
+        'node_call': 'nodeCall',
+        'alias': 'alias',
+        'locator': 'locator',
+        'software': 'software',
+        'version': 'version'
     }
 
-    def __init__(self, info=None):  # noqa: E501
+    def __init__(self, node_call=None, alias=None, locator=None, software=None, version=None):  # noqa: E501
         """GetInfoResponse - a model defined in Swagger"""  # noqa: E501
-        self._info = None
+        self._node_call = None
+        self._alias = None
+        self._locator = None
+        self._software = None
+        self._version = None
         self.discriminator = None
-        if info is not None:
-            self.info = info
+        if node_call is not None:
+            self.node_call = node_call
+        if alias is not None:
+            self.alias = alias
+        if locator is not None:
+            self.locator = locator
+        if software is not None:
+            self.software = software
+        if version is not None:
+            self.version = version
 
     @property
-    def info(self):
-        """Gets the info of this GetInfoResponse.  # noqa: E501
+    def node_call(self):
+        """Gets the node_call of this GetInfoResponse.  # noqa: E501
 
 
-        :return: The info of this GetInfoResponse.  # noqa: E501
-        :rtype: BpqInfo
+        :return: The node_call of this GetInfoResponse.  # noqa: E501
+        :rtype: str
         """
-        return self._info
+        return self._node_call
 
-    @info.setter
-    def info(self, info):
-        """Sets the info of this GetInfoResponse.
+    @node_call.setter
+    def node_call(self, node_call):
+        """Sets the node_call of this GetInfoResponse.
 
 
-        :param info: The info of this GetInfoResponse.  # noqa: E501
-        :type: BpqInfo
+        :param node_call: The node_call of this GetInfoResponse.  # noqa: E501
+        :type: str
         """
 
-        self._info = info
+        self._node_call = node_call
+
+    @property
+    def alias(self):
+        """Gets the alias of this GetInfoResponse.  # noqa: E501
+
+
+        :return: The alias of this GetInfoResponse.  # noqa: E501
+        :rtype: str
+        """
+        return self._alias
+
+    @alias.setter
+    def alias(self, alias):
+        """Sets the alias of this GetInfoResponse.
+
+
+        :param alias: The alias of this GetInfoResponse.  # noqa: E501
+        :type: str
+        """
+
+        self._alias = alias
+
+    @property
+    def locator(self):
+        """Gets the locator of this GetInfoResponse.  # noqa: E501
+
+
+        :return: The locator of this GetInfoResponse.  # noqa: E501
+        :rtype: str
+        """
+        return self._locator
+
+    @locator.setter
+    def locator(self, locator):
+        """Sets the locator of this GetInfoResponse.
+
+
+        :param locator: The locator of this GetInfoResponse.  # noqa: E501
+        :type: str
+        """
+
+        self._locator = locator
+
+    @property
+    def software(self):
+        """Gets the software of this GetInfoResponse.  # noqa: E501
+
+
+        :return: The software of this GetInfoResponse.  # noqa: E501
+        :rtype: str
+        """
+        return self._software
+
+    @software.setter
+    def software(self, software):
+        """Sets the software of this GetInfoResponse.
+
+
+        :param software: The software of this GetInfoResponse.  # noqa: E501
+        :type: str
+        """
+
+        self._software = software
+
+    @property
+    def version(self):
+        """Gets the version of this GetInfoResponse.  # noqa: E501
+
+
+        :return: The version of this GetInfoResponse.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this GetInfoResponse.
+
+
+        :param version: The version of this GetInfoResponse.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

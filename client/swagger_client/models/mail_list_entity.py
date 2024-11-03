@@ -32,11 +32,11 @@ class MailListEntity(object):
         '_date': 'MonthAndDay',
         'type': 'str',
         'state': 'str',
+        'length': 'int',
         'to': 'str',
         'at': 'str',
         '_from': 'str',
-        'subject': 'str',
-        'length': 'int'
+        'subject': 'str'
     }
 
     attribute_map = {
@@ -44,24 +44,24 @@ class MailListEntity(object):
         '_date': 'date',
         'type': 'type',
         'state': 'state',
+        'length': 'length',
         'to': 'to',
         'at': 'at',
         '_from': 'from',
-        'subject': 'subject',
-        'length': 'length'
+        'subject': 'subject'
     }
 
-    def __init__(self, id=None, _date=None, type=None, state=None, to=None, at=None, _from=None, subject=None, length=None):  # noqa: E501
+    def __init__(self, id=None, _date=None, type=None, state=None, length=None, to=None, at=None, _from=None, subject=None):  # noqa: E501
         """MailListEntity - a model defined in Swagger"""  # noqa: E501
         self._id = None
         self.__date = None
         self._type = None
         self._state = None
+        self._length = None
         self._to = None
         self._at = None
         self.__from = None
         self._subject = None
-        self._length = None
         self.discriminator = None
         if id is not None:
             self.id = id
@@ -71,6 +71,8 @@ class MailListEntity(object):
             self.type = type
         if state is not None:
             self.state = state
+        if length is not None:
+            self.length = length
         if to is not None:
             self.to = to
         if at is not None:
@@ -79,8 +81,6 @@ class MailListEntity(object):
             self._from = _from
         if subject is not None:
             self.subject = subject
-        if length is not None:
-            self.length = length
 
     @property
     def id(self):
@@ -167,6 +167,27 @@ class MailListEntity(object):
         self._state = state
 
     @property
+    def length(self):
+        """Gets the length of this MailListEntity.  # noqa: E501
+
+
+        :return: The length of this MailListEntity.  # noqa: E501
+        :rtype: int
+        """
+        return self._length
+
+    @length.setter
+    def length(self, length):
+        """Sets the length of this MailListEntity.
+
+
+        :param length: The length of this MailListEntity.  # noqa: E501
+        :type: int
+        """
+
+        self._length = length
+
+    @property
     def to(self):
         """Gets the to of this MailListEntity.  # noqa: E501
 
@@ -249,27 +270,6 @@ class MailListEntity(object):
         """
 
         self._subject = subject
-
-    @property
-    def length(self):
-        """Gets the length of this MailListEntity.  # noqa: E501
-
-
-        :return: The length of this MailListEntity.  # noqa: E501
-        :rtype: int
-        """
-        return self._length
-
-    @length.setter
-    def length(self, length):
-        """Sets the length of this MailListEntity.
-
-
-        :param length: The length of this MailListEntity.  # noqa: E501
-        :type: int
-        """
-
-        self._length = length
 
     def to_dict(self):
         """Returns the model properties as a dict"""

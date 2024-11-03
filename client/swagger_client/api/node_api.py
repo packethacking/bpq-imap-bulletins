@@ -32,12 +32,12 @@ class NodeApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def info_get(self, **kwargs):  # noqa: E501
-        """info_get  # noqa: E501
+    def node_info_get(self, **kwargs):  # noqa: E501
+        """node_info_get  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.info_get(async_req=True)
+        >>> thread = api.node_info_get(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -47,17 +47,17 @@ class NodeApi(object):
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.info_get_with_http_info(**kwargs)  # noqa: E501
+            return self.node_info_get_with_http_info(**kwargs)  # noqa: E501
         else:
-            (data) = self.info_get_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.node_info_get_with_http_info(**kwargs)  # noqa: E501
             return data
 
-    def info_get_with_http_info(self, **kwargs):  # noqa: E501
-        """info_get  # noqa: E501
+    def node_info_get_with_http_info(self, **kwargs):  # noqa: E501
+        """node_info_get  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.info_get_with_http_info(async_req=True)
+        >>> thread = api.node_info_get_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -77,7 +77,7 @@ class NodeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method info_get" % key
+                    " to method node_info_get" % key
                 )
             params[key] = val
         del params['kwargs']
@@ -102,7 +102,7 @@ class NodeApi(object):
         auth_settings = ['basic']  # noqa: E501
 
         return self.api_client.call_api(
-            '/info', 'GET',
+            '/node/info', 'GET',
             path_params,
             query_params,
             header_params,
@@ -117,36 +117,36 @@ class NodeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def links_get(self, **kwargs):  # noqa: E501
-        """links_get  # noqa: E501
+    def node_mheard_get(self, **kwargs):  # noqa: E501
+        """node_mheard_get  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.links_get(async_req=True)
+        >>> thread = api.node_mheard_get(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :return: GetLinksResponse
+        :return: list[MHeardMultiportDetails]
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.links_get_with_http_info(**kwargs)  # noqa: E501
+            return self.node_mheard_get_with_http_info(**kwargs)  # noqa: E501
         else:
-            (data) = self.links_get_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.node_mheard_get_with_http_info(**kwargs)  # noqa: E501
             return data
 
-    def links_get_with_http_info(self, **kwargs):  # noqa: E501
-        """links_get  # noqa: E501
+    def node_mheard_get_with_http_info(self, **kwargs):  # noqa: E501
+        """node_mheard_get  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.links_get_with_http_info(async_req=True)
+        >>> thread = api.node_mheard_get_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :return: GetLinksResponse
+        :return: list[MHeardMultiportDetails]
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -162,7 +162,7 @@ class NodeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method links_get" % key
+                    " to method node_mheard_get" % key
                 )
             params[key] = val
         del params['kwargs']
@@ -187,14 +187,14 @@ class NodeApi(object):
         auth_settings = ['basic']  # noqa: E501
 
         return self.api_client.call_api(
-            '/links', 'GET',
+            '/node/mheard', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='GetLinksResponse',  # noqa: E501
+            response_type='list[MHeardMultiportDetails]',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -202,43 +202,43 @@ class NodeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def mheard_port_get(self, port, **kwargs):  # noqa: E501
-        """mheard_port_get  # noqa: E501
+    def node_mheard_port_number_get(self, port_number, **kwargs):  # noqa: E501
+        """node_mheard_port_number_get  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.mheard_port_get(port, async_req=True)
+        >>> thread = api.node_mheard_port_number_get(port_number, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int port: (required)
-        :return: list[BpqApiMheardElement]
+        :param int port_number: (required)
+        :return: dict(str, MHeardMonoportDetails)
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.mheard_port_get_with_http_info(port, **kwargs)  # noqa: E501
+            return self.node_mheard_port_number_get_with_http_info(port_number, **kwargs)  # noqa: E501
         else:
-            (data) = self.mheard_port_get_with_http_info(port, **kwargs)  # noqa: E501
+            (data) = self.node_mheard_port_number_get_with_http_info(port_number, **kwargs)  # noqa: E501
             return data
 
-    def mheard_port_get_with_http_info(self, port, **kwargs):  # noqa: E501
-        """mheard_port_get  # noqa: E501
+    def node_mheard_port_number_get_with_http_info(self, port_number, **kwargs):  # noqa: E501
+        """node_mheard_port_number_get  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.mheard_port_get_with_http_info(port, async_req=True)
+        >>> thread = api.node_mheard_port_number_get_with_http_info(port_number, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param int port: (required)
-        :return: list[BpqApiMheardElement]
+        :param int port_number: (required)
+        :return: dict(str, MHeardMonoportDetails)
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['port']  # noqa: E501
+        all_params = ['port_number']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -249,20 +249,20 @@ class NodeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method mheard_port_get" % key
+                    " to method node_mheard_port_number_get" % key
                 )
             params[key] = val
         del params['kwargs']
-        # verify the required parameter 'port' is set
-        if ('port' not in params or
-                params['port'] is None):
-            raise ValueError("Missing the required parameter `port` when calling `mheard_port_get`")  # noqa: E501
+        # verify the required parameter 'port_number' is set
+        if ('port_number' not in params or
+                params['port_number'] is None):
+            raise ValueError("Missing the required parameter `port_number` when calling `node_mheard_port_number_get`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'port' in params:
-            path_params['port'] = params['port']  # noqa: E501
+        if 'port_number' in params:
+            path_params['portNumber'] = params['port_number']  # noqa: E501
 
         query_params = []
 
@@ -280,14 +280,14 @@ class NodeApi(object):
         auth_settings = ['basic']  # noqa: E501
 
         return self.api_client.call_api(
-            '/mheard/{port}', 'GET',
+            '/node/mheard/{portNumber}', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[BpqApiMheardElement]',  # noqa: E501
+            response_type='dict(str, MHeardMonoportDetails)',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -295,41 +295,51 @@ class NodeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def nodes_get(self, **kwargs):  # noqa: E501
-        """nodes_get  # noqa: E501
+    def node_port_port_num_ninomode_post(self, port_num, **kwargs):  # noqa: E501
+        """node_port_port_num_ninomode_post  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.nodes_get(async_req=True)
+        >>> thread = api.node_port_port_num_ninomode_post(port_num, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :return: GetNodesResponse
+        :param int port_num: (required)
+        :param int id:
+        :param NinoModeEnum name:
+        :param NinoModeUsage usage:
+        :param bool persist:
+        :return: None
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.nodes_get_with_http_info(**kwargs)  # noqa: E501
+            return self.node_port_port_num_ninomode_post_with_http_info(port_num, **kwargs)  # noqa: E501
         else:
-            (data) = self.nodes_get_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.node_port_port_num_ninomode_post_with_http_info(port_num, **kwargs)  # noqa: E501
             return data
 
-    def nodes_get_with_http_info(self, **kwargs):  # noqa: E501
-        """nodes_get  # noqa: E501
+    def node_port_port_num_ninomode_post_with_http_info(self, port_num, **kwargs):  # noqa: E501
+        """node_port_port_num_ninomode_post  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.nodes_get_with_http_info(async_req=True)
+        >>> thread = api.node_port_port_num_ninomode_post_with_http_info(port_num, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :return: GetNodesResponse
+        :param int port_num: (required)
+        :param int id:
+        :param NinoModeEnum name:
+        :param NinoModeUsage usage:
+        :param bool persist:
+        :return: None
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = []  # noqa: E501
+        all_params = ['port_num', 'id', 'name', 'usage', 'persist']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -340,16 +350,30 @@ class NodeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method nodes_get" % key
+                    " to method node_port_port_num_ninomode_post" % key
                 )
             params[key] = val
         del params['kwargs']
+        # verify the required parameter 'port_num' is set
+        if ('port_num' not in params or
+                params['port_num'] is None):
+            raise ValueError("Missing the required parameter `port_num` when calling `node_port_port_num_ninomode_post`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
+        if 'port_num' in params:
+            path_params['portNum'] = params['port_num']  # noqa: E501
 
         query_params = []
+        if 'id' in params:
+            query_params.append(('id', params['id']))  # noqa: E501
+        if 'name' in params:
+            query_params.append(('name', params['name']))  # noqa: E501
+        if 'usage' in params:
+            query_params.append(('usage', params['usage']))  # noqa: E501
+        if 'persist' in params:
+            query_params.append(('persist', params['persist']))  # noqa: E501
 
         header_params = {}
 
@@ -357,192 +381,18 @@ class NodeApi(object):
         local_var_files = {}
 
         body_params = None
-        # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['text/plain', 'application/json', 'text/json'])  # noqa: E501
-
         # Authentication setting
         auth_settings = ['basic']  # noqa: E501
 
         return self.api_client.call_api(
-            '/nodes', 'GET',
+            '/node/port/{portNum}/ninomode', 'POST',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='GetNodesResponse',  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=params.get('async_req'),
-            _return_http_data_only=params.get('_return_http_data_only'),
-            _preload_content=params.get('_preload_content', True),
-            _request_timeout=params.get('_request_timeout'),
-            collection_formats=collection_formats)
-
-    def ports_get(self, **kwargs):  # noqa: E501
-        """ports_get  # noqa: E501
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.ports_get(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool
-        :return: GetPortsResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs['_return_http_data_only'] = True
-        if kwargs.get('async_req'):
-            return self.ports_get_with_http_info(**kwargs)  # noqa: E501
-        else:
-            (data) = self.ports_get_with_http_info(**kwargs)  # noqa: E501
-            return data
-
-    def ports_get_with_http_info(self, **kwargs):  # noqa: E501
-        """ports_get  # noqa: E501
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.ports_get_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool
-        :return: GetPortsResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        all_params = []  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
-
-        params = locals()
-        for key, val in six.iteritems(params['kwargs']):
-            if key not in all_params:
-                raise TypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method ports_get" % key
-                )
-            params[key] = val
-        del params['kwargs']
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['text/plain', 'application/json', 'text/json'])  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ['basic']  # noqa: E501
-
-        return self.api_client.call_api(
-            '/ports', 'GET',
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type='GetPortsResponse',  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=params.get('async_req'),
-            _return_http_data_only=params.get('_return_http_data_only'),
-            _preload_content=params.get('_preload_content', True),
-            _request_timeout=params.get('_request_timeout'),
-            collection_formats=collection_formats)
-
-    def users_get(self, **kwargs):  # noqa: E501
-        """users_get  # noqa: E501
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.users_get(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool
-        :return: GetUsersResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs['_return_http_data_only'] = True
-        if kwargs.get('async_req'):
-            return self.users_get_with_http_info(**kwargs)  # noqa: E501
-        else:
-            (data) = self.users_get_with_http_info(**kwargs)  # noqa: E501
-            return data
-
-    def users_get_with_http_info(self, **kwargs):  # noqa: E501
-        """users_get  # noqa: E501
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.users_get_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool
-        :return: GetUsersResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        all_params = []  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
-
-        params = locals()
-        for key, val in six.iteritems(params['kwargs']):
-            if key not in all_params:
-                raise TypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method users_get" % key
-                )
-            params[key] = val
-        del params['kwargs']
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['text/plain', 'application/json', 'text/json'])  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ['basic']  # noqa: E501
-
-        return self.api_client.call_api(
-            '/users', 'GET',
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type='GetUsersResponse',  # noqa: E501
+            response_type=None,  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
