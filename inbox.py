@@ -68,7 +68,11 @@ class MemoryIMAPMailbox(object):
 
     def _load_message_from_api(self, msg):
         message = self.api.mail_id_get(msg.id)
-        message.subject = message.subject.encode("ascii", "ignore").decode()
+        message.subject = (
+            message.subject.encode("ascii", "ignore").decode()
+            if message.subject
+            else ""
+        )
         self.msgs.append(Message(message, [], message.date_time))
 
     def __init__(self, initial_messages, api_client, category, callsign):
