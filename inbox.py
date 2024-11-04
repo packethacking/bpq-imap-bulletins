@@ -66,15 +66,6 @@ class MemoryIMAPMailbox(object):
             log.msg("flushing mailbox")
             self.mbox.flush()
 
-    def _load_message_from_api(self, msg):
-        message = self.api.mail_id_get(msg.id)
-        message.subject = (
-            message.subject.encode("ascii", "ignore").decode()
-            if message.subject
-            else ""
-        )
-        self.msgs.append(Message(message, [], message.date_time))
-
     def __init__(self, initial_messages, api_client, category, callsign):
         self.api = api_client
         self.msgs = []
@@ -86,13 +77,18 @@ class MemoryIMAPMailbox(object):
         self.logger = structlog.get_logger().bind(category=category, callsign=callsign)
 
         self.logger.info(f"Loading {len(initial_messages)} messages")
-        for msg in initial_messages:
-            self._load_message_from_api(msg)
+        self.update_mailbox(initial_messages)
         self.logger.info(f"Loaded {len(self.msgs)} messages")
 
     def update_mailbox(self, msgs):
-        for msg_id in msgs:
-            self._load_message_from_api(msg_id)
+        messages = self.api.mail_ids_get(",".join([str(x.id) for x in msgs]))
+        for msg in messages:
+            msg.subject = (
+                msg.subject.encode("ascii", "ignore").decode()
+                if msg.subject
+                else ""
+            )
+            self.msgs.append(Message(msg, [], msg.date_time))
 
     def _get_msgs(self, msg_set, uid):
         if not self.msgs:

@@ -206,43 +206,43 @@ class MailApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def mail_id_get(self, id, **kwargs):  # noqa: E501
-        """Retrieve mail items by comma separated id. For backwards compatibility, will only return an array if more than one item is requested.  # noqa: E501
+    def mail_ids_get(self, ids, **kwargs):  # noqa: E501
+        """Retrieve mail items by comma separated id.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.mail_id_get(id, async_req=True)
+        >>> thread = api.mail_ids_get(ids, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param str id: (required)
-        :return: MailEntity
+        :param str ids: (required)
+        :return: list[MailEntity]
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.mail_id_get_with_http_info(id, **kwargs)  # noqa: E501
+            return self.mail_ids_get_with_http_info(ids, **kwargs)  # noqa: E501
         else:
-            (data) = self.mail_id_get_with_http_info(id, **kwargs)  # noqa: E501
+            (data) = self.mail_ids_get_with_http_info(ids, **kwargs)  # noqa: E501
             return data
 
-    def mail_id_get_with_http_info(self, id, **kwargs):  # noqa: E501
-        """Retrieve mail items by comma separated id. For backwards compatibility, will only return an array if more than one item is requested.  # noqa: E501
+    def mail_ids_get_with_http_info(self, ids, **kwargs):  # noqa: E501
+        """Retrieve mail items by comma separated id.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.mail_id_get_with_http_info(id, async_req=True)
+        >>> thread = api.mail_ids_get_with_http_info(ids, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
-        :param str id: (required)
-        :return: MailEntity
+        :param str ids: (required)
+        :return: list[MailEntity]
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['id']  # noqa: E501
+        all_params = ['ids']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -253,20 +253,20 @@ class MailApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method mail_id_get" % key
+                    " to method mail_ids_get" % key
                 )
             params[key] = val
         del params['kwargs']
-        # verify the required parameter 'id' is set
-        if ('id' not in params or
-                params['id'] is None):
-            raise ValueError("Missing the required parameter `id` when calling `mail_id_get`")  # noqa: E501
+        # verify the required parameter 'ids' is set
+        if ('ids' not in params or
+                params['ids'] is None):
+            raise ValueError("Missing the required parameter `ids` when calling `mail_ids_get`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'id' in params:
-            path_params['id'] = params['id']  # noqa: E501
+        if 'ids' in params:
+            path_params['ids'] = params['ids']  # noqa: E501
 
         query_params = []
 
@@ -284,14 +284,14 @@ class MailApi(object):
         auth_settings = ['basic']  # noqa: E501
 
         return self.api_client.call_api(
-            '/mail/{id}', 'GET',
+            '/mail/{ids}', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='MailEntity',  # noqa: E501
+            response_type='list[MailEntity]',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
