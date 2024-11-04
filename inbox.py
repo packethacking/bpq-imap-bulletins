@@ -101,7 +101,7 @@ class MemoryIMAPMailbox(object):
         if uid:
             msg_set.last = self.getUIDNext()
             self.logger.info(f"Fetching by UID: {msg_set}")
-            result = {msg.uid: msg for msg in self.msgs if msg.uid in msg_set}
+            result = {msg.uid: msg for msg in self.msgs if msg.uid and msg.uid in msg_set}
             self.logger.info(f"Found {len(result)} messages")
             return result
         return {i: self.msgs[i - 1] for i in msg_set}
@@ -141,7 +141,7 @@ class MemoryIMAPMailbox(object):
 
     def getUIDNext(self):
         self.logger.info(f"Getting next UID:")
-        return max([m.uid for m in self.msgs], default=0) + 1
+        return max([m.uid for m in self.msgs if m.uid], default=0) + 1
 
     def fetch(self, msg_set, uid):
         self.logger.info(f"Fetching messages: {msg_set}")
@@ -253,7 +253,7 @@ class Message(MessagePart):
     def __init__(self, original, flags, date):
 
         email_message = EmailMessage()
-        email_message.set_content(original.body)
+        email_message.set_content(original.body if original.body else "")
         email_message["From"] = original._from
         email_message["To"] = original.to
         email_message["Subject"] = original.subject
@@ -261,7 +261,9 @@ class Message(MessagePart):
 
         self.uid = original.id
         self.flags = set(flags)
-        self.date = httpdate.unixtime_to_httpdate(int(original.date_time.timestamp()))
+        self.date = httpdate.unixtime_to_httpdate(
+            int(original.date_time.timestamp() if original.date_time else 0)
+        )
 
     def getUID(self):
         return self.uid
