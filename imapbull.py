@@ -45,7 +45,10 @@ class IMAPUserAccount:
             if category in MAILBOXES:
                 continue
             MAILBOXES[category] = MemoryIMAPMailbox(
-                [x for x in bulls if x.to == category], self.api, category, self.callsign
+                [x for x in bulls if x.to == category],
+                self.api,
+                category,
+                self.callsign,
             )
 
         if not "INBOX" in MAILBOXES:
@@ -53,7 +56,9 @@ class IMAPUserAccount:
             personal = self.api.mail_personal_get()
             self.latest_personal = max([x.id for x in personal])
             self.logger.info(f"Loaded {len(personal)} personal messages")
-            MAILBOXES["INBOX"] = MemoryIMAPMailbox(personal, self.api, "INBOX", self.callsign)
+            MAILBOXES["INBOX"] = MemoryIMAPMailbox(
+                personal, self.api, "INBOX", self.callsign
+            )
 
         loop = task.LoopingCall(self.updateMailboxes)
         loop.start(60)
@@ -68,9 +73,12 @@ class IMAPUserAccount:
             for category in categories:
                 if category not in MAILBOXES:
                     MAILBOXES[category] = MemoryIMAPMailbox(
-                        [x for x in bulls if x.to == category], self.api, category, self.callsign
+                        [x for x in bulls if x.to == category],
+                        self.api,
+                        category,
+                        self.callsign,
                     )
-                MAILBOXES[category].update_mailbox      (
+                MAILBOXES[category].update_mailbox(
                     [x for x in bulls if x.to == category and x.id > self.latest_bull]
                 )
         self.latest_bull = new_bull
@@ -152,19 +160,27 @@ class IMAPServerProtocol(imap4.IMAP4Server):
         imap4.IMAP4Server.sendLine(self, line)
 
     def do_SEARCH(self, tag, charset, query, uid=0):
+
         imap4.IMAP4Server.do_SEARCH(self, tag, charset, query, uid)
 
     def _singleSearchStep(self, query, msgId, msg, lastSequenceId, lastMessageId):
 
-        """
         for i, x in enumerate(query):
-            if isinstance(x, bytes):
+            if (
+                isinstance(x, bytes)
+                and x not in self._requiresLastMessageInfo
+                and len(query) > 1
+            ):
                 query[i] = x.decode()
-        """
-        return super()._singleSearchStep(query, msgId, msg, lastSequenceId, lastMessageId)
+        return super()._singleSearchStep(
+            query, msgId, msg, lastSequenceId, lastMessageId
+        )
 
-
-    select_SEARCH = (do_SEARCH, imap4.IMAP4Server.opt_charset, imap4.IMAP4Server.arg_searchkeys)
+    select_SEARCH = (
+        do_SEARCH,
+        imap4.IMAP4Server.opt_charset,
+        imap4.IMAP4Server.arg_searchkeys,
+    )
 
 
 class TestServerRealm(object):

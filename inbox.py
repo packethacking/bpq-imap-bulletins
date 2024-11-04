@@ -202,7 +202,8 @@ class MessagePart(object):
                     headers[header.lower()] = self.msg.get(header, "")
         else:
             for name in names:
-                headers[name.lower()] = self.msg.get(name, b"" if isinstance(name, bytes) else "")
+                name = name.decode() if isinstance(name, bytes) else name
+                headers[name.lower()] = self.msg.get(name, "")
         return headers
 
     def getBodyFile(self):
