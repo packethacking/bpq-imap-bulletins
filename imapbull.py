@@ -160,18 +160,22 @@ class IMAPServerProtocol(imap4.IMAP4Server):
         imap4.IMAP4Server.sendLine(self, line)
 
     def do_SEARCH(self, tag, charset, query, uid=0):
-
+        for i, x in enumerate(query):
+            if isinstance(x, bytes):
+                query[i] = x.decode()
         imap4.IMAP4Server.do_SEARCH(self, tag, charset, query, uid)
 
     def _singleSearchStep(self, query, msgId, msg, lastSequenceId, lastMessageId):
 
+        """
         for i, x in enumerate(query):
             if (
                 isinstance(x, bytes)
                 and x not in self._requiresLastMessageInfo
                 and len(query) > 1
-            ):
-                query[i] = x.decode()
+            )   :
+                    query[i] = x.decode()
+        """
         return super()._singleSearchStep(
             query, msgId, msg, lastSequenceId, lastMessageId
         )
