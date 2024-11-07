@@ -67,9 +67,14 @@ class IMAPUserAccount:
         self.logger.info("Updating mailboxes")
         bulls = self.api.mail_bulletins_get()
         new_bull = max([x.id for x in bulls])
+        categories = {x.to for x in bulls}
         self.logger.info(f"Loaded {len(bulls)} bulletins")
+        self.logger.info(f"Latest bulletin: {new_bull}")
+        self.logger.info(f"Categories: {categories}")
+
+        difference = [x for x in bulls if x.id > self.latest_bull]
+
         if new_bull > self.latest_bull:
-            categories = {x.to for x in bulls}
             for category in categories:
                 if category not in MAILBOXES:
                     MAILBOXES[category] = MemoryIMAPMailbox(
@@ -78,9 +83,14 @@ class IMAPUserAccount:
                         category,
                         self.callsign,
                     )
-                MAILBOXES[category].update_mailbox(
-                    [x for x in bulls if x.to == category and x.id > self.latest_bull]
-                )
+                else:
+                    MAILBOXES[category].update_mailbox(
+                        [
+                            x
+                            for x in difference
+                            if x.to == category and x.id > self.latest_bull
+                        ]
+                    )
         self.latest_bull = new_bull
 
         personal = self.api.mail_personal_get()
@@ -166,7 +176,6 @@ class IMAPServerProtocol(imap4.IMAP4Server):
         imap4.IMAP4Server.do_SEARCH(self, tag, charset, query, uid)
 
     def _singleSearchStep(self, query, msgId, msg, lastSequenceId, lastMessageId):
-
         """
         for i, x in enumerate(query):
             if (
