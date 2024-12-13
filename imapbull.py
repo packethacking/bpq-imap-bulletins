@@ -1,6 +1,6 @@
 import os
 
-from twisted.cred import portal, credentials
+from twisted.cred import portal
 from twisted.internet import protocol, defer, task
 from twisted.mail import imap4
 from zope.interface import implementer
@@ -9,9 +9,9 @@ import swagger_client
 from structlog import get_logger
 
 from inbox import MemoryIMAPMailbox
+from checker import RECIEVED_CREDENTIALS
 
 
-RECIEVED_CREDENTIALS = {}
 MAILBOXES = {}
 PERONAL_MAILBOXES = {}
 
@@ -225,35 +225,3 @@ class TestServerIMAPFactory(protocol.Factory):
         p.portal = self.portal
         p.factory = self
         return p
-
-
-class CredentialsNonChecker(object):
-    credentialInterfaces = (
-        credentials.IUsernamePassword,
-        credentials.IUsernameHashedPassword,
-    )
-
-    def requestAvatarId(self, credentials):
-        """automatically validate *any* user"""
-        RECIEVED_CREDENTIALS[credentials.username.decode()] = (
-            credentials.password.decode()
-        )
-        return credentials.username
-
-
-def run(imap_port=2143):
-    from twisted.internet import reactor
-
-    imapFactory = TestServerIMAPFactory()
-
-    imapFactory.portal = portal.Portal(TestServerRealm())
-    imapFactory.portal.registerChecker(CredentialsNonChecker())
-    # imapFactory.portal.registerChecker(checkers.AllowAnonymousAccess())
-
-    imap = reactor.listenTCP(imap_port, imapFactory)
-
-    reactor.run()
-
-
-if __name__ == "__main__":
-    run()
