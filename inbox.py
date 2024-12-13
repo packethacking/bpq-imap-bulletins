@@ -74,19 +74,28 @@ class MemoryIMAPMailbox(object):
             int(hashlib.sha256(category.encode("utf-8")).hexdigest(), 16) % 10**8
         )
         self.category = category
-        self.logger = structlog.get_logger().bind(category=category, callsign=callsign)
+        self.account_identifier = "".join(
+            random.choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ", k=4)
+        )
+        self.logger = structlog.get_logger().bind(
+            category=category,
+            callsign=callsign,
+            account_identifier=self.account_identifier,
+        )
 
         self.logger.info(f"Loading {len(initial_messages)} messages")
         self.update_mailbox(initial_messages)
         self.logger.info(f"Loaded {len(self.msgs)} messages")
 
     def update_mailbox(self, msgs):
-        messages = self.api.mail_ids_get(",".join([str(x.id) for x in msgs]))
+        ids_to_fetch = [str(x.id) for x in msgs]
+        self.logger.info(f"Fetching messages: {ids_to_fetch}")
+        messages = self.api.mail_ids_get(",".join(ids_to_fetch))
+        fetched = [x.id for x in messages]
+        self.logger.info(f"Fetched {len(fetched)} messages")
         for msg in messages:
             msg.subject = (
-                msg.subject.encode("ascii", "ignore").decode()
-                if msg.subject
-                else ""
+                msg.subject.encode("ascii", "ignore").decode() if msg.subject else ""
             )
             self.msgs.append(Message(msg, [], msg.date_time))
 
@@ -97,7 +106,9 @@ class MemoryIMAPMailbox(object):
         if uid:
             msg_set.last = self.getUIDNext()
             self.logger.info(f"Fetching by UID: {msg_set}")
-            result = {msg.uid: msg for msg in self.msgs if msg.uid and msg.uid in msg_set}
+            result = {
+                msg.uid: msg for msg in self.msgs if msg.uid and msg.uid in msg_set
+            }
             self.logger.info(f"Found {len(result)} messages")
             return result
         return {i: self.msgs[i - 1] for i in msg_set}
@@ -131,7 +142,7 @@ class MemoryIMAPMailbox(object):
     def getUID(self, messageNum):
         uid = self.msgs[messageNum].uid
         self.logger.info(f"Getting UID for message {messageNum}: {uid}")
-        return self.msgs[messageNum].uid
+        return self.msgs[messageNum].uidpdate
 
     # return self.msgs[messageNum - 1].uid
 
