@@ -144,8 +144,6 @@ class MemoryIMAPMailbox(object):
         self.logger.info(f"Getting UID for message {messageNum}: {uid}")
         return self.msgs[messageNum].uidpdate
 
-    # return self.msgs[messageNum - 1].uid
-
     def getUIDNext(self):
         self.logger.info(f"Getting next UID:")
         return max([m.uid for m in self.msgs if m.uid], default=0) + 1
@@ -260,8 +258,8 @@ class Message(MessagePart):
 
         email_message = EmailMessage()
         email_message.set_content(original.body if original.body else "")
-        email_message["From"] = original._from
-        email_message["To"] = original.to
+        email_message["From"] = original._from.replace(".#", ".hash")
+        email_message["To"] = original.to.replace(".#", ".hash")
         email_message["Subject"] = original.subject
         super(Message, self).__init__(email_message)
 
