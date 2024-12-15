@@ -11,4 +11,4 @@ COPY . /app
 RUN pip install pipenv
 RUN pipenv install --deploy --ignore-pipfile
 
-CMD ["pipenv", "run", "python", "imapbull.py"]
+CMD ["pipenv", "run", "python", "bpqmail    .py"]
