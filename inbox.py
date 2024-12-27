@@ -89,6 +89,9 @@ class MemoryIMAPMailbox(object):
 
     def update_mailbox(self, msgs):
         ids_to_fetch = [str(x.id) for x in msgs]
+        if not ids_to_fetch:
+            self.logger.info("No messages to fetch")
+            return
         self.logger.info(f"Fetching messages: {ids_to_fetch}")
         messages = self.api.mail_ids_get(",".join(ids_to_fetch))
         fetched = [x.id for x in messages]
