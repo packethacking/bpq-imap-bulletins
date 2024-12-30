@@ -263,7 +263,8 @@ class Message(MessagePart):
         email_message.set_content(original.body if original.body else "")
         email_message["From"] = original._from.replace(".#", ".hash")
         email_message["To"] = original.to.replace(".#", ".hash")
-        email_message["Subject"] = original.subject
+        email_message["Subject"] = original.subject 
+        email_message["Date"] = email.utils.formatdate(date.timestamp())
         super(Message, self).__init__(email_message)
 
         self.uid = original.id
