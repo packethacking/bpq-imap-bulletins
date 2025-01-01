@@ -93,7 +93,7 @@ class IMAPUserAccount:
                     )
         self.latest_bull = new_bull
 
-        personal = self.api.inbox_get()
+        personal = self.api.mail_inbox_get()
         self.logger.info(f"Loaded {len(personal)} personal messages")
         new_personal = max([x.id for x in personal])
         if new_personal > self.latest_personal:
