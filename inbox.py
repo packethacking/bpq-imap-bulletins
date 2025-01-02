@@ -143,9 +143,13 @@ class MemoryIMAPMailbox(object):
         return self.uidvalidity
 
     def getUID(self, messageNum):
-        uid = self.msgs[messageNum].uid
-        self.logger.info(f"Getting UID for message {messageNum}: {uid}")
-        return self.msgs[messageNum].uidpdate
+        try:
+            uid = self.msgs[messageNum].uid
+            self.logger.info(f"Getting UID for message {messageNum}: {uid}")
+            return self.msgs[messageNum].uid
+        except IndexError:
+            self.logger.info(f"Message {messageNum} not found")
+            return None
 
     def getUIDNext(self):
         self.logger.info(f"Getting next UID:")
@@ -263,7 +267,7 @@ class Message(MessagePart):
         email_message.set_content(original.body if original.body else "")
         email_message["From"] = original._from.replace(".#", ".hash")
         email_message["To"] = original.to.replace(".#", ".hash")
-        email_message["Subject"] = original.subject 
+        email_message["Subject"] = original.subject
         email_message["Date"] = email.utils.formatdate(date.timestamp())
         super(Message, self).__init__(email_message)
 
