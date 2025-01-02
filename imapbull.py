@@ -53,7 +53,7 @@ class IMAPUserAccount:
 
         if not "INBOX" in MAILBOXES:
             self.logger.info("Creating INBOX")
-            personal = self.api.mail_personal_get()
+            personal = self.api.mail_inbox_get()
             self.latest_personal = max([x.id for x in personal])
             self.logger.info(f"Loaded {len(personal)} personal messages")
             MAILBOXES["INBOX"] = MemoryIMAPMailbox(
