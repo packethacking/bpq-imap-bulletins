@@ -1,4 +1,5 @@
 import os
+import time
 
 from twisted.cred import portal
 from twisted.internet import protocol, defer, task
@@ -43,6 +44,7 @@ class IMAPUserAccount:
                 bulls = self.api.mail_bulletins_get()
                 break
             except ApiException as exc:
+                time.sleep(1)
                 if attempt == 4:
                     raise
                 self.logger.warning(

@@ -100,9 +100,9 @@ class MemoryIMAPMailbox(object):
         for attempt in range(5):
             try:
                 messages = self.api.mail_ids_get(",".join(ids_to_fetch))
-                time.sleep(1)
                 break
             except ApiException as exc:
+                time.sleep(1)
                 if attempt == 4:
                     continue
                 self.logger.warning("mail_ids_get failed", attempt=attempt + 1, error=str(exc))
