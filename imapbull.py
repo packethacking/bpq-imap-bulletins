@@ -36,7 +36,17 @@ class IMAPUserAccount:
         self.latest_personal = 0
         self.update_loop = None
 
-        bulls = self.api.mail_bulletins_get()
+        bulls = []
+        for attempt in range(5):
+            try:
+                bulls = self.api.mail_bulletins_get()
+                break
+            except swagger_client.ApiException as exc:
+                if attempt == 4:
+                    raise
+                self.logger.warning(
+                    "mail_bulletins_get failed", attempt=attempt + 1, error=str(exc)
+                )
         self.logger.info(f"Loaded {len(bulls)} bulletins for {self.callsign}")
 
         self.latest_bull = max([x.id for x in bulls], default=0)
