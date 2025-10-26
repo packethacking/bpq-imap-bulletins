@@ -23,6 +23,7 @@ import mailbox
 import email.utils
 from itertools import count
 from io import StringIO, BytesIO
+import time
 
 from zope.interface import implementer
 
@@ -31,6 +32,7 @@ import structlog
 
 from twisted.mail import imap4
 from twisted.python import log
+from swagger_client.rest import ApiException
 
 
 SEEN = r"\Seen"
@@ -93,7 +95,18 @@ class MemoryIMAPMailbox(object):
             self.logger.info("No messages to fetch")
             return
         self.logger.info(f"Fetching messages: {ids_to_fetch}")
-        messages = self.api.mail_ids_get(",".join(ids_to_fetch))
+
+        messages = []
+        for attempt in range(5):
+            try:
+                messages = self.api.mail_ids_get(",".join(ids_to_fetch))
+                time.sleep(1)
+                break
+            except ApiException as exc:
+                if attempt == 4:
+                    continue
+                self.logger.warning("mail_ids_get failed", attempt=attempt + 1, error=str(exc))
+
         fetched = [x.id for x in messages]
         self.logger.info(f"Fetched {len(fetched)} messages")
         for msg in messages:
