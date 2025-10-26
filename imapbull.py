@@ -34,11 +34,12 @@ class IMAPUserAccount:
         self.api = swagger_client.MailApi(self.client)
 
         self.latest_personal = 0
+        self.update_loop = None
 
         bulls = self.api.mail_bulletins_get()
         self.logger.info(f"Loaded {len(bulls)} bulletins for {self.callsign}")
 
-        self.latest_bull = max([x.id for x in bulls])
+        self.latest_bull = max([x.id for x in bulls], default=0)
 
         categories = {x.to for x in bulls}
         for category in categories:
@@ -54,19 +55,19 @@ class IMAPUserAccount:
         if not "INBOX" in MAILBOXES:
             self.logger.info("Creating INBOX")
             personal = self.api.mail_inbox_get()
-            self.latest_personal = max([x.id for x in personal])
+            self.latest_personal = max([x.id for x in personal], default=0)
             self.logger.info(f"Loaded {len(personal)} personal messages")
             MAILBOXES["INBOX"] = MemoryIMAPMailbox(
                 personal, self.api, "INBOX", self.callsign
             )
 
-        loop = task.LoopingCall(self.updateMailboxes)
-        loop.start(60)
+        self.update_loop = task.LoopingCall(self.updateMailboxes)
+        self.update_loop.start(60)
 
     def updateMailboxes(self):
         self.logger.info("Updating mailboxes")
         bulls = self.api.mail_bulletins_get()
-        new_bull = max([x.id for x in bulls])
+        new_bull = max([x.id for x in bulls], default=0)
         categories = {x.to for x in bulls}
         self.logger.info(f"Loaded {len(bulls)} bulletins")
         self.logger.info(f"Latest bulletin: {new_bull}")
@@ -95,7 +96,7 @@ class IMAPUserAccount:
 
         personal = self.api.mail_inbox_get()
         self.logger.info(f"Loaded {len(personal)} personal messages")
-        new_personal = max([x.id for x in personal])
+        new_personal = max([x.id for x in personal], default=0)
         if new_personal > self.latest_personal:
             MAILBOXES["INBOX"].update_mailbox(
                 [x for x in personal if x.id > self.latest_personal]
@@ -150,6 +151,13 @@ class IMAPUserAccount:
 
     def unsubscribe(self, path):
         return True
+
+    def cleanup(self):
+        """Stop the update loop when user logs out"""
+        self.logger.info("Cleaning up IMAPUserAccount")
+        if self.update_loop and self.update_loop.running:
+            self.update_loop.stop()
+            self.logger.info("Stopped update loop")
 
 
 @implementer(portal.IRealm)
@@ -206,8 +214,9 @@ class TestServerRealm(object):
             if requestedInterface in self.avatarInterfaces:
                 avatarClass = self.avatarInterfaces[requestedInterface]
                 avatar = avatarClass(callsign=avatarId)
-                # null logout function: take no arguments and do nothing
-                logout = lambda: None
+                # logout function: cleanup the update loop
+                def logout():
+                    avatar.cleanup()
                 return defer.succeed((requestedInterface, avatar, logout))
 
         # none of the requested interfaces was supported
