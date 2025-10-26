@@ -67,7 +67,18 @@ class IMAPUserAccount:
 
         if not "INBOX" in MAILBOXES:
             self.logger.info("Creating INBOX")
-            personal = self.api.mail_inbox_get()
+            personal = []
+            for attempt in range(5):
+                try:
+                    personal = self.api.mail_inbox_get()
+                    break
+                except ApiException as exc:
+                    time.sleep(1)
+                    if attempt == 4:
+                        self.logger.error("Failed to load personal messages after 5 attempts")
+                    self.logger.warning(
+                        "mail_inbox_get failed", attempt=attempt + 1, error=str(exc)
+                    )
             self.latest_personal = max([x.id for x in personal], default=0)
             self.logger.info(f"Loaded {len(personal)} personal messages")
             MAILBOXES["INBOX"] = MemoryIMAPMailbox(
