@@ -46,7 +46,7 @@ class IMAPUserAccount:
             except ApiException as exc:
                 time.sleep(1)
                 if attempt == 4:
-                    raise
+                    self.logger.error("Failed to load bulletins after 5 attempts")
                 self.logger.warning(
                     "mail_bulletins_get failed", attempt=attempt + 1, error=str(exc)
                 )

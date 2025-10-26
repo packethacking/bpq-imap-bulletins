@@ -104,7 +104,7 @@ class MemoryIMAPMailbox(object):
             except ApiException as exc:
                 time.sleep(1)
                 if attempt == 4:
-                    continue
+                    self.logger.error("Failed to load messages after 5 attempts")
                 self.logger.warning("mail_ids_get failed", attempt=attempt + 1, error=str(exc))
 
         fetched = [x.id for x in messages]
