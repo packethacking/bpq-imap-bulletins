@@ -6,6 +6,7 @@ from twisted.mail import imap4
 from zope.interface import implementer
 
 import swagger_client
+from swagger_client.rest import ApiException
 from structlog import get_logger
 
 from inbox import MemoryIMAPMailbox
@@ -41,7 +42,7 @@ class IMAPUserAccount:
             try:
                 bulls = self.api.mail_bulletins_get()
                 break
-            except swagger_client.ApiException as exc:
+            except ApiException as exc:
                 if attempt == 4:
                     raise
                 self.logger.warning(
